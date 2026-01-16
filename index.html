@@ -2,95 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>By Max</title>
+  <title>By Max Launcher</title>
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      height: 100vh;
       background: #020617;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: white;
     }
 
-    .top {
-      padding: 10px;
+    .panel {
       background: #0f172a;
-      display: flex;
-      gap: 10px;
+      padding: 25px;
+      border-radius: 14px;
+      width: 320px;
+      text-align: center;
     }
 
-    input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 6px;
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
       border: none;
-      font-size: 15px;
+      font-size: 16px;
     }
 
     button {
-      padding: 10px 16px;
-      border-radius: 6px;
-      border: none;
       background: #38bdf8;
       cursor: pointer;
-      font-size: 15px;
-    }
-
-    iframe {
-      width: 100%;
-      height: calc(100vh - 50px);
-      border: none;
-      background: black;
-    }
-
-    .note {
-      font-size: 12px;
-      opacity: 0.6;
-      padding: 6px 10px;
     }
   </style>
 </head>
 <body>
 
-  <div class="top">
+  <div class="panel">
+    <h2>Open a Site</h2>
     <input id="url" placeholder="example.com">
-    <button onclick="openSite()">Open</button>
+    <button onclick="launch()">Launch</button>
   </div>
 
-  <div class="note">By Max</div>
-
-  <iframe id="frame"></iframe>
-
   <script>
-    function openSite() {
+    function launch() {
       let url = document.getElementById("url").value.trim();
       if (!url) return;
 
-      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      if (!url.startsWith("http")) {
         url = "https://" + url;
       }
 
-      const newTab = window.open("", "_blank");
-      newTab.document.write(`
+      const tab = window.open("", "_blank");
+      tab.document.write(`
         <!DOCTYPE html>
         <html>
         <head>
           <title>By Max</title>
           <style>
-            body { margin:0; background:#020617; color:white; font-family:Arial; }
-            .bar {
-              padding:10px;
-              background:#0f172a;
-              font-size:14px;
+            body {
+              margin: 0;
+              background: #020617;
+              color: white;
+              font-family: Arial, sans-serif;
+            }
+            .top {
+              height: 40px;
+              background: #0f172a;
+              display: flex;
+              align-items: center;
+              padding: 0 10px;
+              gap: 10px;
+              font-size: 14px;
+            }
+            .top button {
+              background: #38bdf8;
+              border: none;
+              border-radius: 6px;
+              padding: 6px 10px;
+              cursor: pointer;
             }
             iframe {
-              width:100%;
-              height:calc(100vh - 40px);
-              border:none;
+              width: 100%;
+              height: calc(100vh - 40px);
+              border: none;
+              background: black;
             }
           </style>
         </head>
         <body>
-          <div class="bar">By Max</div>
+          <div class="top">
+            <strong>By Max</strong>
+            <button onclick="location.reload()">Reload</button>
+            <button onclick="window.open('${url}', '_blank')">Open Original</button>
+          </div>
           <iframe src="${url}"></iframe>
         </body>
         </html>
@@ -100,6 +107,3 @@
 
 </body>
 </html>
-
-
-
