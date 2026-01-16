@@ -11,162 +11,112 @@
       color: white;
       height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
     }
 
-    .panel {
+    .header {
       background: #0f172a;
-      padding: 28px;
-      border-radius: 14px;
-      width: 360px;
-      text-align: center;
-      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      padding: 12px;
+      font-size: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    input, button {
+    .frame-wrap {
+      position: relative;
+      flex: 1;
+    }
+
+    iframe {
       width: 100%;
-      padding: 12px;
-      margin-top: 12px;
-      border-radius: 8px;
+      height: 100%;
       border: none;
-      font-size: 16px;
+      background: black;
+    }
+
+    .watermark {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      font-size: 12px;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .loader {
+      padding: 10px;
+      background: #020617;
+      display: flex;
+      gap: 8px;
+    }
+
+    input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
     }
 
     button {
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: none;
       background: #38bdf8;
       cursor: pointer;
     }
 
-    .small {
-      font-size: 12px;
-      opacity: 0.7;
-      margin-top: 10px;
+    .note {
+      font-size: 11px;
+      opacity: 0.6;
+      padding: 4px 10px;
     }
   </style>
 </head>
 <body>
 
-  <div class="panel">
-    <h2>Bolivar Middle School</h2>
-    <button onclick="openLauncher()">Open School Page</button>
-    <div class="small">
-      Unofficial student launcher<br>
-      by Max Guerra
-    </div>
+  <div class="header">
+    <strong>Bolivar Middle School</strong>
+    <span style="font-size:12px;opacity:0.7;">Unofficial Student Launcher</span>
+  </div>
+
+  <!-- This bar ONLY appears when the page is loaded INSIDE itself -->
+  <div class="loader" id="loader" style="display:none;">
+    <input id="url" placeholder="example.com">
+    <button onclick="loadSite()">Open</button>
+  </div>
+
+  <div class="frame-wrap">
+    <iframe id="frame"></iframe>
+    <div class="watermark">by Max Guerra</div>
+  </div>
+
+  <div class="note">
+    External content belongs to its original owners
   </div>
 
   <script>
-    function openLauncher() {
-      const tab = window.open("", "_blank");
-      tab.document.write(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <title>Bolivar Middle School</title>
-          <style>
-            body {
-              margin: 0;
-              font-family: Arial, sans-serif;
-              background: #020617;
-              color: white;
-              height: 100vh;
-              display: flex;
-              flex-direction: column;
-            }
+    const frame = document.getElementById("frame");
+    const loader = document.getElementById("loader");
 
-            .header {
-              background: #0f172a;
-              padding: 14px;
-              font-size: 18px;
-              font-weight: bold;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-            }
+    // If this page is the TOP page, load a copy of itself
+    if (window === window.top) {
+      frame.src = window.location.href;
+    } else {
+      // If inside an iframe, show URL input
+      loader.style.display = "flex";
+    }
 
-            .content {
-              flex: 1;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
+    function loadSite() {
+      let url = document.getElementById("url").value.trim();
+      if (!url) return;
 
-            .box {
-              background: #020617;
-              padding: 25px;
-              border-radius: 12px;
-              width: 340px;
-              text-align: center;
-            }
+      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        url = "https://" + url;
+      }
 
-            input, button {
-              width: 100%;
-              padding: 12px;
-              margin-top: 10px;
-              border-radius: 8px;
-              border: none;
-              font-size: 15px;
-            }
-
-            button {
-              background: #38bdf8;
-              cursor: pointer;
-            }
-
-            .watermark {
-              position: fixed;
-              bottom: 10px;
-              right: 12px;
-              font-size: 12px;
-              opacity: 0.6;
-              pointer-events: none;
-            }
-
-            .footer {
-              font-size: 12px;
-              opacity: 0.7;
-              padding: 8px;
-              text-align: center;
-            }
-          </style>
-        </head>
-        <body>
-
-          <div class="header">
-            Bolivar Middle School
-            <span style="font-size:12px;opacity:0.7;">Unofficial Launcher</span>
-          </div>
-
-          <div class="content">
-            <div class="box">
-              <h3>Open a Website</h3>
-              <input id="url" placeholder="example.com">
-              <button onclick="go()">Open</button>
-            </div>
-          </div>
-
-          <div class="footer">
-            External content belongs to its original owners
-          </div>
-
-          <div class="watermark">by Max Guerra</div>
-
-          <script>
-            function go() {
-              let url = document.getElementById("url").value.trim();
-              if (!url) return;
-              if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                url = "https://" + url;
-              }
-              window.open(url, "_blank");
-            }
-          <\/script>
-
-        </body>
-        </html>
-      `);
+      frame.src = url;
     }
   </script>
 
