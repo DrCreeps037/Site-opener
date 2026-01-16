@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Link Launcher</title>
+  <title>Website Redirect</title>
   <style>
     body {
       margin: 0;
@@ -62,18 +62,18 @@
 <body>
 
   <div class="card">
-    <h2>Website Launcher</h2>
+    <h2>Website Redirect</h2>
     <input id="url" placeholder="example.com">
-    <button onclick="openSite()">Open Site</button>
-    <div class="note">Opens in a new tab</div>
+    <button onclick="go()">Go</button>
+    <div class="note">Redirects this page</div>
   </div>
 
   <script>
-    function openSite() {
+    function go() {
       let url = document.getElementById("url").value.trim();
 
       if (!url) {
-        alert("Please enter a URL");
+        alert("Enter a URL");
         return;
       }
 
@@ -81,10 +81,12 @@
         url = "https://" + url;
       }
 
-      window.open(url, "_blank");
+      // THIS changes the page URL
+      window.location.href = url;
     }
   </script>
 
 </body>
 </html>
+
 
