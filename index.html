@@ -2,34 +2,161 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>By Max Launcher</title>
+  <title>Bolivar Middle School</title>
   <style>
     body {
       margin: 0;
-      height: 100vh;
-      background: #020617;
       font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: #020617;
       color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
 
     .panel {
       background: #0f172a;
       padding: 25px;
       border-radius: 14px;
-      width: 340px;
+      width: 360px;
       text-align: center;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
     }
 
     input, button {
       width: 100%;
       padding: 12px;
-      margin-top: 10px;
+      margin-top: 12px;
       border-radius: 8px;
       border: none;
       font-size: 16px;
     }
 
-    but
+    button {
+      background: #38bdf8;
+      cursor: pointer;
+    }
+
+    .small {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="panel">
+    <h2>Site Launcher</h2>
+    <input id="url" placeholder="example.com">
+    <button onclick="launch()">Launch</button>
+    <div class="small">
+      External content is owned by its original creators.
+    </div>
+  </div>
+
+  <script>
+    function launch() {
+      let url = document.getElementById("url").value.trim();
+      if (!url) return;
+
+      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        url = "https://" + url;
+      }
+
+      const tab = window.open("", "_blank");
+      tab.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <title>Bolivar Middle School</title>
+          <style>
+            body {
+              margin: 0;
+              background: #020617;
+              font-family: Arial, sans-serif;
+              color: white;
+              height: 100vh;
+              display: flex;
+              flex-direction: column;
+            }
+
+            .bar {
+              background: #0f172a;
+              padding: 10px;
+              font-size: 14px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+
+            .bar button {
+              background: #38bdf8;
+              border: none;
+              border-radius: 6px;
+              padding: 6px 10px;
+              cursor: pointer;
+            }
+
+            .frame-wrap {
+              position: relative;
+              flex: 1;
+            }
+
+            iframe {
+              width: 100%;
+              height: 100%;
+              border: none;
+              background: black;
+            }
+
+            .watermark {
+              position: absolute;
+              bottom: 10px;
+              right: 12px;
+              font-size: 12px;
+              opacity: 0.6;
+              pointer-events: none;
+            }
+
+            .credit {
+              font-size: 12px;
+              opacity: 0.7;
+              padding: 6px;
+              text-align: center;
+              background: #020617;
+            }
+          </style>
+        </head>
+        <body>
+
+          <div class="bar">
+            <strong>Bolivar Middle School</strong>
+            <div>
+              <button onclick="location.reload()">Reload</button>
+              <button onclick="window.open('${url}', '_blank')">Open Original</button>
+            </div>
+          </div>
+
+          <div class="frame-wrap">
+            <iframe src="${url}" sandbox="allow-scripts allow-forms allow-same-origin"></iframe>
+            <div class="watermark">by Max Guerra</div>
+          </div>
+
+          <div class="credit">
+            Content loaded from
+            <a href="${url}" target="_blank" style="color:#38bdf8">${url}</a><br>
+            All rights belong to the original website.
+          </div>
+
+        </body>
+        </html>
+      `);
+    }
+  </script>
+
+</body>
+</html>
+
