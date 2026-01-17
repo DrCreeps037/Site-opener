@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bolivar Middle School</title>
+  <title>Student Browser Portal</title>
   <style>
     body {
       margin: 0;
@@ -11,114 +11,112 @@
       color: white;
       height: 100vh;
       display: flex;
-      flex-direction: column;
-    }
-
-    .header {
-      background: #0f172a;
-      padding: 12px;
-      font-size: 16px;
-      display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: center;
     }
 
-    .frame-wrap {
-      position: relative;
-      flex: 1;
+    .card {
+      background: #0f172a;
+      padding: 30px;
+      border-radius: 14px;
+      width: 360px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      background: #38bdf8;
+      cursor: pointer;
+    }
+
+    .small {
+      font-size: 12px;
+      opacity: 0.6;
+      margin-top: 10px;
     }
 
     iframe {
       width: 100%;
-      height: 100%;
+      height: calc(100vh - 90px);
       border: none;
-      background: black;
+    }
+
+    .top {
+      background: #0f172a;
+      padding: 10px;
+      display: flex;
+      gap: 8px;
     }
 
     .watermark {
-      position: absolute;
+      position: fixed;
       bottom: 10px;
       right: 12px;
       font-size: 12px;
       opacity: 0.6;
       pointer-events: none;
     }
-
-    .loader {
-      padding: 10px;
-      background: #020617;
-      display: flex;
-      gap: 8px;
-    }
-
-    input {
-      flex: 1;
-      padding: 8px;
-      border-radius: 6px;
-      border: none;
-      font-size: 14px;
-    }
-
-    button {
-      padding: 8px 14px;
-      border-radius: 6px;
-      border: none;
-      background: #38bdf8;
-      cursor: pointer;
-    }
-
-    .note {
-      font-size: 11px;
-      opacity: 0.6;
-      padding: 4px 10px;
-    }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <strong>Bolivar Middle School</strong>
-    <span style="font-size:12px;opacity:0.7;">Unofficial Student Launcher</span>
+<div id="login" class="card">
+  <h2>Student Browser</h2>
+  <input id="user" placeholder="Username">
+  <input id="pin" placeholder="PIN (demo only)" type="password">
+  <button onclick="login()">Enter</button>
+  <div class="small">
+    Demo portal — not a real account system
   </div>
+</div>
 
-  <!-- This bar ONLY appears when the page is loaded INSIDE itself -->
-  <div class="loader" id="loader" style="display:none;">
+<div id="browser" style="display:none; width:100%; height:100%; flex-direction:column;">
+  <div class="top">
     <input id="url" placeholder="example.com">
-    <button onclick="loadSite()">Open</button>
+    <button onclick="go()">Go</button>
   </div>
+  <iframe id="frame"></iframe>
+</div>
 
-  <div class="frame-wrap">
-    <iframe id="frame"></iframe>
-    <div class="watermark">by Max Guerra</div>
-  </div>
+<div class="watermark">by Max Guerra</div>
 
-  <div class="note">
-    External content belongs to its original owners
-  </div>
+<script>
+  const loginBox = document.getElementById("login");
+  const browser = document.getElementById("browser");
 
-  <script>
-    const frame = document.getElementById("frame");
-    const loader = document.getElementById("loader");
+  if (localStorage.getItem("loggedIn")) {
+    showBrowser();
+  }
 
-    // If this page is the TOP page, load a copy of itself
-    if (window === window.top) {
-      frame.src = window.location.href;
-    } else {
-      // If inside an iframe, show URL input
-      loader.style.display = "flex";
-    }
+  function login() {
+    const user = document.getElementById("user").value.trim();
+    if (!user) return alert("Enter a username");
+    localStorage.setItem("loggedIn", "true");
+    localStorage.setItem("user", user);
+    showBrowser();
+  }
 
-    function loadSite() {
-      let url = document.getElementById("url").value.trim();
-      if (!url) return;
+  function showBrowser() {
+    loginBox.style.display = "none";
+    browser.style.display = "flex";
+  }
 
-      if (!url.startsWith("http://") && !url.startsWith("https://")) {
-        url = "https://" + url;
-      }
-
-      frame.src = url;
-    }
-  </script>
+  function go() {
+    let url = document.getElementById("url").value.trim();
+    if (!url) return;
+    if (!url.startsWith("http")) url = "https://" + url;
+    document.getElementById("frame").src = url;
+  }
+</script>
 
 </body>
 </html>
